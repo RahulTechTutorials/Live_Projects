@@ -71,7 +71,8 @@ def amazon_product_pricing():
         else:
             continue
     ###Merging all the dataframes into one
-    product_super_final = reduce(lambda left,right : pd.merge(left.set_index('product_id'),right.set_index('product_id').iloc[:,-1].to_frame(),how='left',left_index=True, right_index=True),product_df_dict)
+    product_df_dict[0] = product_df_dict[0].set_index('product_id')
+    product_super_final = reduce(lambda left,right : pd.merge(left,right.set_index('product_id').iloc[:,-1].to_frame(),how='left',left_index=True, right_index=True),product_df_dict)
     ###checking if there are any variation in the prices over the time -- 
     df = product_super_final.T.iloc[1:,:].describe(include='all').T
     change_prod_list = df[df.unique > 1].index.values
